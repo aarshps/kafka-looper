@@ -1,1 +1,1 @@
-## Given a list of table/topic names, iterations can be done
+## Given a sample Kafka Connector and a Table List, looping and updating can be done easily.
