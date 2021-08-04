@@ -1,0 +1,1 @@
+## Given a list of table/topic names, iterations can be done
