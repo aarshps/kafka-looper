@@ -19,7 +19,7 @@
 		"topic.prefix": "TEST.",
 		"value.converter.schema.registry.ssl.keystore.location": "/opt/certs/kafka.keystore.jks",
 		"poll.interval.ms": "300000",
-		"transforms.copyIdToKey.fields": "",
+		"transforms.copyIdToKey.fields": "$tableKey",
 		"value.converter": "io.confluent.connect.avro.AvroConverter",
 		"key.converter": "io.confluent.connect.avro.AvroConverter",
 		"key.converter.schema.registry.ssl.keystore.password": "changeit",

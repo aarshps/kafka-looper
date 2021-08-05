@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -41,15 +40,25 @@ func main() {
 		log.Fatal("Unable to parse file as CSV for "+tablesFilePath, err)
 	}
 
-	for index, tablesFileRecord := range tablesFileRecords {
+	for _, tablesFileRecord := range tablesFileRecords {
 		tableName := tablesFileRecord[0]
+		tableKey := tablesFileRecord[1]
 
-		sampleSourceConnectorConfig := strings.Replace(string(sampleSourceConnectorConfig), "$tableName", tableName, -1)
+		sampleSourceConnectorConfig :=
+			strings.Replace(
+				strings.Replace(
+					string(sampleSourceConnectorConfig),
+					"$tableName",
+					tableName,
+					-1),
+				"$tableKey",
+				tableKey,
+				-1)
 
-		outputFileName := outputFilePath + "/Test_" + tableName + "_" + strconv.Itoa(index) + ".json"
+		outputFileName := outputFilePath + "/" + tableName + ".json"
 
 		ioutil.WriteFile(outputFileName, []byte(sampleSourceConnectorConfig), 0644)
 
-		fmt.Println("Write to " + outputFileName + "complete")
+		fmt.Println("Write to " + outputFileName + " complete")
 	}
 }
