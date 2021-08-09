@@ -43,11 +43,16 @@ func main() {
 	for _, tablesFileRecord := range tablesFileRecords {
 		tableName := tablesFileRecord[0]
 		tableKey := tablesFileRecord[1]
+		tableCategory := tablesFileRecord[2]
 
 		sampleSourceConnectorConfig :=
 			strings.Replace(
 				strings.Replace(
-					string(sampleSourceConnectorConfig),
+					strings.Replace(
+						string(sampleSourceConnectorConfig),
+						"$tableCategory",
+						tableCategory,
+						-1),
 					"$tableName",
 					tableName,
 					-1),
@@ -55,7 +60,7 @@ func main() {
 				tableKey,
 				-1)
 
-		outputFileName := outputFilePath + "/" + tableName + ".json"
+		outputFileName := outputFilePath + "/MW-FACETS-DBO-TS3-" + tableCategory + "-3H-INCR-" + tableName + ".json"
 
 		ioutil.WriteFile(outputFileName, []byte(sampleSourceConnectorConfig), 0644)
 
