@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/csv"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -40,30 +39,42 @@ func main() {
 		log.Fatal("Unable to parse file as CSV for "+tablesFilePath, err)
 	}
 
-	for _, tablesFileRecord := range tablesFileRecords {
+	for index, tablesFileRecord := range tablesFileRecords {
+		if index == 0 {
+			continue
+		}
+
+		sampleSourceConnectorConfigString := string(sampleSourceConnectorConfig)
+
 		tableName := tablesFileRecord[0]
 		tableKey := tablesFileRecord[1]
 		tableCategory := tablesFileRecord[2]
+		tableAuditColumn := tablesFileRecord[3]
 
-		sampleSourceConnectorConfig :=
-			strings.Replace(
-				strings.Replace(
-					strings.Replace(
-						string(sampleSourceConnectorConfig),
-						"$tableCategory",
-						tableCategory,
-						-1),
-					"$tableName",
-					tableName,
-					-1),
-				"$tableKey",
-				tableKey,
-				-1)
+		if tableName != "" {
+			sampleSourceConnectorConfigString =
+				strings.Replace(sampleSourceConnectorConfigString, "$tableName", tableName, -1)
+		}
 
-		outputFileName := outputFilePath + "/MW-FACETS-DBO-TS3-" + tableCategory + "-3H-INCR-" + tableName + ".json"
+		if tableKey != "" {
+			sampleSourceConnectorConfigString =
+				strings.Replace(sampleSourceConnectorConfigString, "$tableKey", tableKey, -1)
+		}
 
-		ioutil.WriteFile(outputFileName, []byte(sampleSourceConnectorConfig), 0644)
+		if tableCategory != "" {
+			sampleSourceConnectorConfigString =
+				strings.Replace(sampleSourceConnectorConfigString, "$tableCategory", tableCategory, -1)
+		}
 
-		fmt.Println("Write to " + outputFileName + " complete")
+		if tableAuditColumn != "" {
+			sampleSourceConnectorConfigString =
+				strings.Replace(sampleSourceConnectorConfigString, "$tableAuditColumn", tableAuditColumn, -1)
+		}
+
+		outputFileName := outputFilePath + "/MW_FACETS-DBO-TS3-" + tableCategory + "-3H-INCR-" + tableName + ".json"
+
+		ioutil.WriteFile(outputFileName, []byte(sampleSourceConnectorConfigString), 0644)
+
+		log.Println("Write to " + outputFileName + " complete")
 	}
 }
